@@ -1,0 +1,166 @@
+using System;
+using System.Collections.Generic;
+
+namespace Baitap38
+{
+    abstract class Person
+    {
+        public string Name { get; set; }
+        public string Id { get; set; }
+    }
+
+    interface Kpi
+    {
+        float kpi();
+    }
+
+    class Student : Person, Kpi
+    {
+        private string department;
+
+        public string Department
+        {
+            get { return department; }
+            set
+            {
+                if (value == "ICT" || value == "ECO")
+                    department = value;
+                else
+                    throw new ArgumentException("Invalid department.");
+            }
+        }
+
+        public float GPA { get; set; }
+
+        public float kpi()
+        {
+            return GPA;
+        }
+
+        public Student(string name, string id, string department, float gpa)
+        {
+            Name = name;
+            Id = id;
+            Department = department;
+            GPA = gpa;
+
+            if (id.Length != 8 || !int.TryParse(id, out _))
+                throw new ArgumentException("Invalid ID.");
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Person obs = null;
+            try
+            {
+                obs = new Student("Nguyễn Tiến Dũng", "12345678", "ICT", 3.5f);
+                Console.WriteLine($"KPI: {((Student)obs).kpi()}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            try
+            {
+                obs = new Student("Nguyễn Văn A", "12345", "ABC", 3.5f);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            List<Person> list1 = new List<Person>();
+            List<Person> list2 = new List<Person>();
+
+            while (true)
+            {
+                Console.Write("Nhập tên sinh viên bàn 1 (# để dừng): ");
+                string name = Console.ReadLine();
+                if (name == "#") break;
+                Console.Write("Nhập ID: ");
+                string id = Console.ReadLine();
+                Console.Write("Nhập Department: ");
+                string department = Console.ReadLine();
+                Console.Write("Nhập GPA: ");
+                float gpa = float.Parse(Console.ReadLine());
+                list1.Add(new Student(name, id, department, gpa));
+            }
+
+            while (true)
+            {
+                Console.Write("Nhập tên sinh viên bàn 2 (# để dừng): ");
+                string name = Console.ReadLine();
+                if (name == "#") break;
+                Console.Write("Nhập ID: ");
+                string id = Console.ReadLine();
+                Console.Write("Nhập Department: ");
+                string department = Console.ReadLine();
+                Console.Write("Nhập GPA: ");
+                float gpa = float.Parse(Console.ReadLine());
+                list2.Add(new Student(name, id, department, gpa));
+            }
+
+            Console.WriteLine("Danh sách bàn 1:");
+            foreach (var student in list1)
+            {
+                Console.WriteLine($"{((Student)student).Name} - {((Student)student).Id} - {((Student)student).Department} - {((Student)student).GPA}");
+            }
+
+            Console.WriteLine("Danh sách bàn 2:");
+            foreach (var student in list2)
+            {
+                Console.WriteLine($"{((Student)student).Name} - {((Student)student).Id} - {((Student)student).Department} - {((Student)student).GPA}");
+            }
+
+            List<List<Person>> list_list = new List<List<Person>> { list1, list2 };
+
+            Console.WriteLine("List_list:");
+            foreach (var list in list_list)
+            {
+                foreach (var student in list)
+                {
+                    Console.WriteLine($"{((Student)student).Name} - {((Student)student).Id} - {((Student)student).Department} - {((Student)student).GPA}");
+                }
+            }
+
+            Dictionary<string, Student> dic1 = new Dictionary<string, Student>();
+            foreach (Student student in list1)
+            {
+                dic1[student.Id] = student;
+            }
+
+            Console.WriteLine("Tìm sinh viên có tên là 'Nam':");
+            foreach (var student in dic1.Values)
+            {
+                if (student.Name == "Nam")
+                {
+                    Console.WriteLine($"{student.Name} - {student.Id} - {student.Department} - {student.GPA}");
+                }
+            }
+
+            // Tạo danh sách listf các số thực 4 byte
+            List<float> listf = new List<float> { 3.5f, -1.2f, 7.8f, -5f };
+
+            // Hiển thị các phần tử trong listf theo chỉ số
+            Console.WriteLine("Các phần tử trong listf:");
+            for (int i = 0; i < listf.Count; i++)
+            {
+                Console.WriteLine(listf[i]);
+            }
+
+            // Sắp xếp danh sách listf theo thứ tự tăng dần
+            listf.Sort();
+
+            // Hiển thị các phần tử đã sắp xếp trong listf
+            Console.WriteLine("Các phần tử trong listf sau khi sắp xếp:");
+            for (int i = 0; i < listf.Count; i++)
+            {
+                Console.WriteLine(listf[i]);
+            }
+        }
+    }
+}
